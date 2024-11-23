@@ -13,7 +13,7 @@ enum Suit: CaseIterable{
 }
 var Val: [String] = ["3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A", "2"]
 
-struct Card: View {
+struct Card: View, Equatable {
     let cardNum: String
     let cardSuit: Suit
     
