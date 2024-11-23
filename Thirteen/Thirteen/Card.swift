@@ -27,14 +27,14 @@ struct Card: View, Equatable {
     
     var suitImage: String{
         switch cardSuit {
-        case Suit.Spade:
-            return "suit.spade.fill"
-        case Suit.Club:
-            return "suit.club.fill"
-        case Suit.Diamond:
-            return "suit.diamond.fill"
-        case Suit.Heart:
-            return "suit.heart.fill"
+            case Suit.Spade:
+                return "suit.spade.fill"
+            case Suit.Club:
+                return "suit.club.fill"
+            case Suit.Diamond:
+                return "suit.diamond.fill"
+            case Suit.Heart:
+                return "suit.heart.fill"
         }
     }
     

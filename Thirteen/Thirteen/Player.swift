@@ -27,6 +27,13 @@ class Player{
         }
         return play
     }
+    func chooseCards(cardChoiceIndexes: [Int])->[Card]{
+        var choice: [Card] = []
+        for i in 0..<cardChoiceIndexes.count{
+            choice.append(hand[i])
+        }
+        return choice
+    }
     //private
     var hasFold: Bool
     var isTurn: Bool

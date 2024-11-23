@@ -34,12 +34,13 @@ class gameLogic{
         }
         isShuffled = true
     }
-    func dealDeck(numPlayers: Int) -> [[Card]]{
+    func dealDeck() -> [[Card]]{
         if(isShuffled){
             isShuffled = false
+            let numPlayers = players.count
             var deal: [[Card]] = []
             if(numPlayers <= 4 && numPlayers >= 2){
-                for hands in 0..<4{
+                for hands in 0..<numPlayers{
                     var temp: [Card] = []
                     for cards in 0..<13{
                         temp.append(deck[(hands*13)+cards])
@@ -55,19 +56,41 @@ class gameLogic{
     func playFirstRound(numPlayers: Int) -> Player{
         //initialize return value
         var lastFolder: Player = Player()
+        //initialize current player and card choice values
+        var currPlayer: Player = Player()
+        var currChoice: [Card] = []
         //Shuffle Deck
         if(!isShuffled){
             createDeck()
             shuffleDeck()
         }
         //Deal Hands
-        let amtPlayers = players.count
-        let hands: [[Card]] = dealDeck(numPlayers: amtPlayers)
-        for num in 0..<amtPlayers{
+        let hands: [[Card]] = dealDeck()
+        for num in 0..<players.count{
             players[num].hand = hands[num]
         }
         //find lowest value in any player's hand
+        var lowestPlayerIndex: Int = 0
+        var lowestCardIndex: Int = 0
+        var lowestValFound: Int = 12
+        var lowestSuitFound: Int = 3
+        for hands in 0..<players.count{
+            for card in 0..<players[hands].hand.count{
+                let currVal: Int = Val.firstIndex(of: players[hands].hand[card].cardNum)!
+                let currSuit: Int = Suit.allCases.firstIndex(of: players[hands].hand[card].cardSuit)!
+                if(currVal > lowestValFound){
+                    continue
+                }
+                if(currSuit > lowestSuitFound){
+                    continue
+                }
+                lowestCardIndex = card
+                lowestPlayerIndex = hands
+            }
+        }
         //have first player set pattern w/ first play + check if legal
+        currPlayer = players[lowestPlayerIndex]
+        
         //restrict other plays to that pattern
         //figure out who folds last + return for start next
         return lastFolder
