@@ -14,6 +14,8 @@ class gameLogic{
         self.deck = []
         self.isShuffled = false
         self.players = []
+        self.isWon = false
+        self.winner = Player()
     }
     func createDeck(){
         for num in 0...12{
@@ -50,11 +52,38 @@ class gameLogic{
             return []
         }
     }
-    func playRound(lastFolder: Player){
-        
+    func playFirstRound(numPlayers: Int) -> Player{
+        //initialize return value
+        var lastFolder: Player = Player()
+        //Shuffle Deck
+        if(!isShuffled){
+            createDeck()
+            shuffleDeck()
+        }
+        //Deal Hands
+        let amtPlayers = players.count
+        let hands: [[Card]] = dealDeck(numPlayers: amtPlayers)
+        for num in 0..<amtPlayers{
+            players[num].hand = hands[num]
+        }
+        //find lowest value in any player's hand
+        //have first player set pattern w/ first play + check if legal
+        //restrict other plays to that pattern
+        //figure out who folds last + return for start next
+        return lastFolder
+    }
+    func playRound(numPlayers: Int) -> Player{
+        //initialize return value
+        var lastFolder: Player = Player()
+        //have first player set pattern w/ first play + check if legal + check if out
+        //restrict other plays to that pattern + check if any players run out
+        //figure out who folds last + return for start next
+        return lastFolder
     }
     //private
     private var deck: [Card]
     private var isShuffled: Bool
+    private var isWon: Bool
     private var players: [Player]
+    private var winner: Player
 }

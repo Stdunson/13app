@@ -18,10 +18,14 @@ class Player{
     func setHand(newHand: [Card]){
         hand = newHand
     }
-    func play(playCard: Card)->Card{
-        let cardIndex: Int = hand.firstIndex(of: playCard)!
-        hand.remove(at: cardIndex)
-        return playCard
+    func playCards(playCards: [Card])->[Card]{
+        var play: [Card] = []
+        for card in playCards{
+            let cardIndex: Int = hand.firstIndex(of: card)!
+            play.append(playCards[cardIndex])
+            hand.remove(at: cardIndex)
+        }
+        return play
     }
     //private
     var hasFold: Bool
