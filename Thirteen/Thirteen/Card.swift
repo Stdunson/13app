@@ -11,11 +11,11 @@ import SwiftUI
 enum Suit: CaseIterable{
     case Spade, Club, Diamond, Heart
 }
-var Val: [String] = ["3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A", "2"]
 
-struct Card: View, Equatable {
-    let cardNum: String
+struct Card: View{
+    let cardVal: Int
     let cardSuit: Suit
+    @State var played: Bool = false
     
     var cardColor: Color{
         if(cardSuit == Suit.Spade || cardSuit == Suit.Club){
@@ -38,10 +38,27 @@ struct Card: View, Equatable {
         }
     }
     
+    var cardNum: String{
+        if(cardVal <= 8 && cardVal != 0){
+            return String(cardVal + 2)
+        }else if(cardVal == 9){
+            return "J"
+        }else if(cardVal == 10){
+            return "Q"
+        }else if(cardVal == 11){
+            return "K"
+        }else if(cardVal == 12){
+            return "A"
+        }else if(cardVal == 12){
+            return "2"
+        }
+        return "error"
+    }
+    
     var body: some View {
         ZStack {
             RoundedRectangle(cornerRadius: 30)
-                .frame(width: 50, height: 80)
+                .frame(width: 60, height: 90)
                 .overlay(RoundedRectangle(cornerRadius: 10)
                     .stroke(Color.black, lineWidth: 3) )
                 .foregroundStyle(.white)
@@ -59,5 +76,5 @@ struct Card: View, Equatable {
 }
 
 #Preview {
-    Card(cardNum: Val[10], cardSuit: Suit.Heart)
+    Card(cardVal: 11, cardSuit: Suit.Heart)
 }
