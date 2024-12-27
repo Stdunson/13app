@@ -15,7 +15,9 @@ struct Credits: View {
                     .font(.largeTitle)
                     .bold()
                 Text("- All Game Logic, Models, and UI")
+                Text("- Socials: [Instagram](https://www.instagram.com/stdunson/?hl=en), [Linkedin](https://www.linkedin.com/in/shavaughn-dunson/), [Github](https://github.com/Stdunson)")                
             }
+            .accentColor(.gray)
         }
     }
 }

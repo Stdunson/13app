@@ -51,12 +51,18 @@ struct GamePlayLMult: View {
             if(deckReady){
                 VStack{
                     //tab wit exit n allat
+                    NavigationLink(destination: ContentView()){
+                        ZStack{
+                            Text("Quit Game")
+                                .foregroundStyle(.gray)
+                        }
+                    }
                     //prompt
                     Text(message)
                         .font(.title)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.center)
-                        .padding()
+                        .padding([.leading, .bottom, .trailing])
                     //other players' name + amt cards
                     HStack{
                         ForEach(players) { player in
@@ -74,6 +80,7 @@ struct GamePlayLMult: View {
                                             .frame(width: 100)
                                             .multilineTextAlignment(.center)
                                         Text("\(player.getCardAmt()) cards")
+                                        Text("\(player.getWins()) wins")
                                     }
                                 }
                             }

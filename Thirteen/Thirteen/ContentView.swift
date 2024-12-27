@@ -56,6 +56,7 @@ struct ContentView: View {
         }
         .padding()
         .accentColor(.black)
+        .navigationBarBackButtonHidden(true)
     }
 }
 

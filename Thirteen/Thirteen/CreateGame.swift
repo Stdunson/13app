@@ -8,7 +8,7 @@
 import SwiftUI
 
 struct CreateGame: View {
-    @State var numPlayers: Int = 0
+    @State var numPlayers: Int = 2
     @State var message: String = "New Game"
     @State var playerList: [Player] = []
     @State var gamemode: Int = 2
@@ -38,7 +38,7 @@ struct CreateGame: View {
                         message = "Coming Soon..."
                     }){
                         ZStack{
-                            RoundedRectangle(cornerRadius: 1)
+                            RoundedRectangle(cornerRadius: 10)
                                 .frame(width: 30, height: 30)
                                 .overlay(RoundedRectangle(cornerRadius: 10)
                                     .stroke(Color.black, lineWidth: 3) )
@@ -52,20 +52,30 @@ struct CreateGame: View {
                         gamemode = 2
                     }){
                         ZStack{
-                            RoundedRectangle(cornerRadius: 1)
-                                .frame(width: 30, height: 30)
-                                .overlay(RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.black, lineWidth: 3) )
-                                .foregroundStyle(.white)
-                            Image(systemName: "person.2.fill")
-                                .foregroundStyle(.black)
+                            if(gamemode == 2){
+                                RoundedRectangle(cornerRadius: 10)
+                                    .frame(width: 30, height: 30)
+                                    .overlay(RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.black, lineWidth: 3) )
+                                    .foregroundStyle(.black)
+                                Image(systemName: "person.2.fill")
+                                    .foregroundStyle(.white)
+                            }else{
+                                RoundedRectangle(cornerRadius: 10)
+                                    .frame(width: 30, height: 30)
+                                    .overlay(RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.black, lineWidth: 3) )
+                                    .foregroundStyle(.white)
+                                Image(systemName: "person.2.fill")
+                                    .foregroundStyle(.black)
+                            }
                         }
                     }
                     Button(action: {
                         message = "Coming Soon..."
                     }){
                         ZStack{
-                            RoundedRectangle(cornerRadius: 1)
+                            RoundedRectangle(cornerRadius: 10)
                                 .frame(width: 30, height: 30)
                                 .overlay(RoundedRectangle(cornerRadius: 10)
                                     .stroke(Color.black, lineWidth: 3) )
@@ -85,10 +95,17 @@ struct CreateGame: View {
                         p4message = "N/A"
                     }){
                         ZStack{
-                            Image(systemName: "2.circle")
-                                .resizable()
-                                .frame(maxWidth: 30, maxHeight: 30)
-                                .foregroundStyle(.black)
+                            if(numPlayers == 2){
+                                Image(systemName: "2.circle.fill")
+                                    .resizable()
+                                    .frame(maxWidth: 30, maxHeight: 30)
+                                    .foregroundStyle(.black)
+                            }else{
+                                Image(systemName: "2.circle")
+                                    .resizable()
+                                    .frame(maxWidth: 30, maxHeight: 30)
+                                    .foregroundStyle(.black)
+                            }
                             
                         }
                     }
@@ -98,11 +115,17 @@ struct CreateGame: View {
                         p4message = "N/A"
                     }){
                         ZStack{
-                            Image(systemName: "3.circle")
-                                .resizable()
-                                .frame(maxWidth: 30, maxHeight: 30)
-                                .foregroundStyle(.black)
-                            
+                            if(numPlayers == 3){
+                                Image(systemName: "3.circle.fill")
+                                    .resizable()
+                                    .frame(maxWidth: 30, maxHeight: 30)
+                                    .foregroundStyle(.black)
+                            }else{
+                                Image(systemName: "3.circle")
+                                    .resizable()
+                                    .frame(maxWidth: 30, maxHeight: 30)
+                                    .foregroundStyle(.black)
+                            }
                         }
                     }
                     Button(action: {
@@ -111,11 +134,17 @@ struct CreateGame: View {
                         p4message = "Enter Player 4 Name:"
                     }){
                         ZStack{
-                            Image(systemName: "4.circle")
-                                .resizable()
-                                .frame(maxWidth: 30, maxHeight: 30)
-                                .foregroundStyle(.black)
-                            
+                            if(numPlayers == 4){
+                                Image(systemName: "4.circle.fill")
+                                    .resizable()
+                                    .frame(maxWidth: 30, maxHeight: 30)
+                                    .foregroundStyle(.black)
+                            }else{
+                                Image(systemName: "4.circle")
+                                    .resizable()
+                                    .frame(maxWidth: 30, maxHeight: 30)
+                                    .foregroundStyle(.black)
+                            }
                         }
                     }
                 }
