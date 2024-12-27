@@ -9,13 +9,53 @@ import SwiftUI
 
 struct ContentView: View {
     var body: some View {
-        VStack {
-            Image(systemName: "globe")
-                .imageScale(.large)
-                .foregroundStyle(.tint)
-            Text("Hello, world!")
+        NavigationView{
+            VStack {
+                Text("Thirteen")
+                    .font(.largeTitle)
+                    .fontWeight(.bold)
+                    .padding()
+                NavigationLink(destination: CreateGame()){
+                    Text("Play Game")
+                        .frame(width: 300, height: 50, alignment: .center)
+                        .foregroundStyle(.black)
+                        .background(.gray)
+                        .cornerRadius(20)
+                        .fontWeight(.bold)
+                        .font(.title3)
+                }
+                NavigationLink(destination: HowToPlay()){
+                    Text("How To Play Thirteen")
+                        .frame(width: 300, height: 50, alignment: .center)
+                        .foregroundStyle(.black)
+                        .background(.gray)
+                        .cornerRadius(20)
+                        .fontWeight(.bold)
+                        .font(.title3)
+                }
+                NavigationLink(destination: Settings()){
+                    Text("Settings")
+                        .frame(width: 300, height: 50, alignment: .center)
+                        .foregroundStyle(.black)
+                        .background(.gray)
+                        .cornerRadius(20)
+                        .fontWeight(.bold)
+                        .font(.title3)
+                }
+                NavigationLink(destination: Credits()){
+                    Text("Credits")
+                        .frame(width: 300, height: 50, alignment: .center)
+                        .foregroundStyle(.black)
+                        .background(.gray)
+                        .cornerRadius(20)
+                        .fontWeight(.bold)
+                        .font(.title3)
+                }
+                
+            }
         }
         .padding()
+        .accentColor(.black)
     }
 }
 
