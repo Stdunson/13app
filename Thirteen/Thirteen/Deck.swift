@@ -27,9 +27,21 @@ class Deck{
             cards[j] = temp
         }
     }
-    //implement after defining player
-    func deal(){
-        
+
+    func deal(players: [Player]){
+        shuffle()
+        let playerCount: Int = players.count
+        if playerCount > 4 || playerCount < 2{
+            print("error")
+            return
+        }
+        for i in 0..<playerCount{
+            var temphand: [Card] = []
+            for c in 0..<13{
+                temphand.append(cards[i*13 + c])
+            }
+            players[i].setHand(newHand: temphand)
+        }
     }
     
     var cards: [Card]

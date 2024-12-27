@@ -24,6 +24,15 @@ struct ContentView: View {
                         .fontWeight(.bold)
                         .font(.title3)
                 }
+                NavigationLink(destination: HowToPlay()){
+                    Text("How To Play Thirteen")
+                        .frame(width: 300, height: 50, alignment: .center)
+                        .foregroundStyle(.black)
+                        .background(.gray)
+                        .cornerRadius(20)
+                        .fontWeight(.bold)
+                        .font(.title3)
+                }
                 NavigationLink(destination: Settings()){
                     Text("Settings")
                         .frame(width: 300, height: 50, alignment: .center)
@@ -46,6 +55,7 @@ struct ContentView: View {
             }
         }
         .padding()
+        .accentColor(.black)
     }
 }
 

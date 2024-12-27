@@ -8,7 +8,7 @@
 import Foundation
 import SwiftUI
 
-class Player{
+class Player: Identifiable{
     init(pName: String){
         hand = []
         wincount = 0
@@ -25,7 +25,7 @@ class Player{
         }
     }
     func getCard(index: Int) -> Card{
-        if(index >= 0 && index < 13){
+        if(index >= 0 && index < hand.count){
             return hand[index]
         }else{
             print("There was an error")
@@ -33,14 +33,13 @@ class Player{
         }
     }
     func removeCard(index: Int){
-        //there's no playcard function, handle that later based on how game engine will work
-        cardPlayed[index] = true
+        if(index >= 0 && index < hand.count){
+            hand.remove(at: index)
+        }
     }
     func hasWon() -> Bool{
-        for i in 0...12{
-            if(!cardPlayed[i]){
-                return false
-            }
+        if !hand.isEmpty{
+            return false
         }
         return true
     }
@@ -100,6 +99,10 @@ class Player{
             }
         }
         return true
+    }
+    
+    func getCardAmt() -> Int{
+        return hand.count
     }
     
     var hand: [Card]

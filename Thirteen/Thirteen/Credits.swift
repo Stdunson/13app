@@ -10,7 +10,12 @@ import SwiftUI
 struct Credits: View {
     var body: some View {
         NavigationView {
-            Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+            VStack{
+                Text("Shavaughn Dunson")
+                    .font(.largeTitle)
+                    .bold()
+                Text("- All Game Logic, Models, and UI")
+            }
         }
     }
 }
