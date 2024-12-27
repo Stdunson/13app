@@ -8,56 +8,109 @@
 import SwiftUI
 
 //for the cards
-enum Suit: CaseIterable{
+enum Suit: CaseIterable, Comparable{
     case Spade, Club, Diamond, Heart
 }
-var Val: [String] = ["3", "4", "5", "6", "7", "8", "9", "10", "J", "Q", "K", "A", "2"]
 
-struct Card: View, Equatable {
-    let cardNum: String
+class Card: Identifiable, ObservableObject{
+    init(cardVal: Int, cardSuit: Suit) {
+        self.cardVal = cardVal
+        self.cardSuit = cardSuit
+        self.sel = false
+    }
+    let cardVal: Int
     let cardSuit: Suit
+    let id = UUID()
+    @Published var sel: Bool
+    func togglesel(){
+        if(sel){
+            sel = false
+        }else{
+            sel = true
+            print("Selected")
+        }
+    }
+}
+
+struct CardView: View{
+    @State var card: Card
+    @State var selected: Bool = false
+    @State var cardOpacity: Double = 1
     
     var cardColor: Color{
-        if(cardSuit == Suit.Spade || cardSuit == Suit.Club){
+        if(card.cardSuit == Suit.Spade || card.cardSuit == Suit.Club){
             return Color.black
         }else{
             return Color.red
         }
     }
     
-    var suitImage: String{
-        switch cardSuit {
-        case Suit.Spade:
-            return "suit.spade.fill"
-        case Suit.Club:
-            return "suit.club.fill"
-        case Suit.Diamond:
-            return "suit.diamond.fill"
-        case Suit.Heart:
-            return "suit.heart.fill"
+    func toggleSelected(){
+        if(selected){
+            cardOpacity = 1
+            selected = false
+        }else{
+            cardOpacity = 0.2
+            selected = true
         }
     }
     
+    var suitImage: String{
+        switch card.cardSuit {
+            case Suit.Spade:
+                return "suit.spade.fill"
+            case Suit.Club:
+                return "suit.club.fill"
+            case Suit.Diamond:
+                return "suit.diamond.fill"
+            case Suit.Heart:
+                return "suit.heart.fill"
+        }
+    }
+    
+    var cardNum: String{
+        if(card.cardVal <= 8 && card.cardVal != 0){
+            return String(card.cardVal + 2)
+        }else if(card.cardVal == 9){
+            return "J"
+        }else if(card.cardVal == 10){
+            return "Q"
+        }else if(card.cardVal == 11){
+            return "K"
+        }else if(card.cardVal == 12){
+            return "A"
+        }else if(card.cardVal == 13){
+            return "2"
+        }
+        return "error"
+    }
+    
     var body: some View {
-        ZStack {
-            RoundedRectangle(cornerRadius: 30)
-                .frame(width: 50, height: 80)
-                .overlay(RoundedRectangle(cornerRadius: 10)
-                    .stroke(Color.black, lineWidth: 3) )
-                .foregroundStyle(.white)
-            VStack{
-                Text(cardNum)
-                    .foregroundStyle(cardColor)
-                    .fontWeight(.bold)
-                    .font(.largeTitle)
-                Image(systemName: suitImage)
-                    .foregroundStyle(cardColor)
-                    .font(.largeTitle)
+        Button(action: {
+            toggleSelected()
+            card.togglesel()
+        }){
+            ZStack {
+                RoundedRectangle(cornerRadius: 30)
+                    .frame(width: 60, height: 90)
+                    .overlay(RoundedRectangle(cornerRadius: 10)
+                        .stroke(Color.black, lineWidth: 3) )
+                    .foregroundStyle(.white)
+                VStack{
+                    Text(cardNum)
+                        .foregroundStyle(cardColor)
+                        .fontWeight(.bold)
+                        .font(.largeTitle)
+                    Image(systemName: suitImage)
+                        .foregroundStyle(cardColor)
+                        .font(.largeTitle)
+                }
             }
+            .opacity(cardOpacity)
         }
     }
 }
 
 #Preview {
-    Card(cardNum: Val[10], cardSuit: Suit.Heart)
+    CardView(card: Card(cardVal: 11, cardSuit: Suit.Heart))
 }
