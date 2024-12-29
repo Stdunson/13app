@@ -19,13 +19,17 @@ struct GamePlayLMult: View {
     @State var message: String = "Play your turn!"
     @State var currCards: [Card] = []
     @State var game: GameObject = GameObject(players: [])
-    @State var viewID = UUID()  // change this to foce the view to update, workaround
+    @State var viewID = UUID()
+    @State var gameOver: Bool = false
+    @State var winner: Int = 0
+    @State var showHand: Bool = false
     
     func nextPlayer(){
         if game.isRoundOver(){
             if(game.isGameOver()){
-                let winner: Int = game.manageWins()
+                winner = game.manageWins()
                 message = "Congrats! \(players[winner].name) has won the game!"
+                gameOver = true
                 return
             }
             currPlayerIndex = game.StartNewRound(lastFolder: currPlayerIndex)
@@ -105,14 +109,16 @@ struct GamePlayLMult: View {
                     Text("Your Hand:")
                         .font(.headline)
                         .multilineTextAlignment(.center)
-                    ScrollView(.horizontal){
-                        HStack{
-                            ForEach(players[currPlayerIndex].hand){ card in
-                                CardView(card: card)
+                    if(showHand){
+                        ScrollView(.horizontal){
+                            HStack{
+                                ForEach(players[currPlayerIndex].hand){ card in
+                                    CardView(card: card)
+                                }
                             }
                         }
+                            .frame(height: 100)
                     }
-                        .frame(height: 100)
                     HStack{
                         //play button
                         Button("Play cards"){
@@ -126,6 +132,7 @@ struct GamePlayLMult: View {
                                 if game.isLegalPlay(cardList: selectedCards) {
                                     game.playCards(player: players[currPlayerIndex], cardList: selectedCards)
                                     currCards = game.currPlay
+                                    showHand = false
                                     nextPlayer()
                                 } else {
                                     message = "Invalid play. Try Again, \(players[currPlayerIndex].name)"
@@ -143,8 +150,9 @@ struct GamePlayLMult: View {
                             .fontWeight(.semibold)
                         //fold button
                         Button("Fold"){
-                            if(!players[currPlayerIndex].hasFolded()){
+                            if(!players[currPlayerIndex].hasFolded() && !game.isFirstRound){
                                 players[currPlayerIndex].fold()
+                                showHand = false
                                 nextPlayer()
                                 viewID = UUID()
                             }
@@ -153,8 +161,19 @@ struct GamePlayLMult: View {
                             .tint(.gray)
                             .foregroundStyle(.black)
                             .fontWeight(.semibold)
+                        //button to show hand
+                        Button("Show Hand"){
+                            showHand = true
+                            viewID = UUID()
+                        }
+                            .buttonStyle(.borderedProminent)
+                            .tint(.gray)
+                            .foregroundStyle(.black)
+                            .fontWeight(.semibold)
                     }
-                    
+                    .navigationDestination(isPresented: $gameOver){
+                        GameOverLMult(players: players, winner: winner)
+                    }
                 }
             }else{
                 Text("Deck loading")

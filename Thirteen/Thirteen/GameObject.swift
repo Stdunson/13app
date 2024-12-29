@@ -183,6 +183,24 @@ class GameObject{
             isFirstRound = false
         }
         currPlay = cardList
+        //sort currplay
+        if currPlay.count > 1{
+            for i in 0..<currPlay.count - 1{
+                for j in 0..<currPlay.count - 1 - i{
+                    if(currPlay[j + 1].cardVal < currPlay[j].cardVal){
+                        let temp: Card = currPlay[j]
+                        currPlay[j] = currPlay[j + 1]
+                        currPlay[j + 1] = temp
+                    }else if(currPlay[j + 1].cardVal == currPlay[j].cardVal){
+                        if(currPlay[j + 1].cardSuit < currPlay[j].cardSuit){
+                            let temp: Card = currPlay[j]
+                            currPlay[j] = currPlay[j + 1]
+                            currPlay[j + 1] = temp
+                        }
+                    }
+                }
+            }
+        }
         
         // Collect indices to remove
         var indices: [Int] = []
