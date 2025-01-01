@@ -38,20 +38,51 @@ struct GamePlayLMult: View {
             return
         }
         if currPlayerIndex == numPlayers - 1{
-            if !players[0].hasFolded(){
-                currPlayerIndex = 0
-                message = "Play your turn, \(players[currPlayerIndex].name)"
+            for p in 0..<numPlayers{
+                if !players[p].hasFolded(){
+                    currPlayerIndex = p
+                    message = "Play your turn, \(players[currPlayerIndex].name)"
+                    break
+                }
             }
         }else{
-            if !players[currPlayerIndex + 1].hasFolded(){
-                currPlayerIndex += 1
-                message = "Play your turn, \(players[currPlayerIndex].name)"
+            let currIn: Int = currPlayerIndex
+            for p in currPlayerIndex + 1..<numPlayers{
+                if !players[p].hasFolded(){
+                    currPlayerIndex = p
+                    message = "Play your turn, \(players[currPlayerIndex].name)"
+                    break
+                }
+            }
+            if(currPlayerIndex == currIn){
+                for p in 0..<currPlayerIndex{
+                    if !players[p].hasFolded(){
+                        currPlayerIndex = p
+                        message = "Play your turn, \(players[currPlayerIndex].name)"
+                        break
+                    }
+                }
             }
         }
     }
     
+    func orderPlayers() -> [Player]{
+        var newOther: [Player] = []
+        for i in currPlayerIndex + 1..<numPlayers{
+            newOther.append(players[i])
+        }
+        if(currPlayerIndex == 0){
+            return newOther
+        }
+        for i in 0..<currPlayerIndex{
+            newOther.append(players[i])
+        }
+        
+        return newOther
+    }
+    
     var body: some View {
-        NavigationView {
+        NavigationStack {
             if(deckReady){
                 VStack{
                     //tab wit exit n allat
@@ -69,25 +100,9 @@ struct GamePlayLMult: View {
                         .padding([.leading, .bottom, .trailing])
                     //other players' name + amt cards
                     HStack{
-                        ForEach(players) { player in
-                            if(!player.equals(otherPlayer: players[currPlayerIndex])){
-                                ZStack{
-                                    RoundedRectangle(cornerRadius: 30)
-                                        .frame(width: 100, height: 100)
-                                        .overlay(RoundedRectangle(cornerRadius: 5)
-                                            .stroke(Color.black, lineWidth: 3) )
-                                        .foregroundStyle(.gray)
-                                        .background(.gray)
-                                    VStack{
-                                        Text("\(player.getName())")
-                                            .fontWeight(.semibold)
-                                            .frame(width: 100)
-                                            .multilineTextAlignment(.center)
-                                        Text("\(player.getCardAmt()) cards")
-                                        Text("\(player.getWins()) wins")
-                                    }
-                                }
-                            }
+                        let otherPlayerList: [Player] = orderPlayers()
+                        ForEach(otherPlayerList) { player in
+                            PlayerInfoCard(player: player)
                         }
                     }
                     //current play
@@ -155,6 +170,8 @@ struct GamePlayLMult: View {
                                 showHand = false
                                 nextPlayer()
                                 viewID = UUID()
+                            }else if(game.isFirstRound){
+                                message = "Invalid play. Try Again, \(players[currPlayerIndex].name)"
                             }
                         }
                             .buttonStyle(.borderedProminent)
@@ -192,5 +209,5 @@ struct GamePlayLMult: View {
 }
 
 #Preview {
-    GamePlayLMult(players: [Player(pName: "Shavaughn"), Player(pName: "STDemon")])
+    GamePlayLMult(players: [Player(pName: "Shavaughn"), Player(pName: "STDemon"), Player(pName: "Shadiddy"), Player(pName: "Shaglizzy")])
 }
