@@ -209,5 +209,5 @@ struct GamePlayLMult: View {
 }
 
 #Preview {
-    GamePlayLMult(players: [Player(pName: "Shavaughn"), Player(pName: "STDemon"), Player(pName: "Shadiddy"), Player(pName: "Shaglizzy")])
+    GamePlayLMult(players: [Player(pName: "Shavaughn"), Player(pName: "Himothy")])
 }
