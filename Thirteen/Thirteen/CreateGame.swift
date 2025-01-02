@@ -35,16 +35,27 @@ struct CreateGame: View {
                         .font(.title2)
                         .fontWeight(.semibold)
                     Button(action: {
-                        message = "Coming Soon..."
+                        message = "Singleplayer Game"
+                        gamemode = 1
                     }){
                         ZStack{
-                            RoundedRectangle(cornerRadius: 10)
-                                .frame(width: 30, height: 30)
-                                .overlay(RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.black, lineWidth: 3) )
-                                .foregroundStyle(.white)
-                            Image(systemName: "person.fill")
-                                .foregroundStyle(.black)
+                            if(gamemode == 1){
+                                RoundedRectangle(cornerRadius: 10)
+                                    .frame(width: 30, height: 30)
+                                    .overlay(RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.black, lineWidth: 3) )
+                                    .foregroundStyle(.black)
+                                Image(systemName: "person.fill")
+                                    .foregroundStyle(.white)
+                            }else{
+                                RoundedRectangle(cornerRadius: 10)
+                                    .frame(width: 30, height: 30)
+                                    .overlay(RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.black, lineWidth: 3) )
+                                    .foregroundStyle(.white)
+                                Image(systemName: "person.fill")
+                                    .foregroundStyle(.black)
+                            }
                         }
                     }
                     Button(action: {
@@ -148,6 +159,7 @@ struct CreateGame: View {
                         }
                     }
                 }
+                
                 //if statements sets up other adding gamemodes
                 if(gamemode == 1){
                     TextField("Enter Name:", text: $p1name)
@@ -180,22 +192,29 @@ struct CreateGame: View {
                 
                 Button("Enter Players"){
                     playerList = []
-                    for i in 1...numPlayers{
-                        switch i{
-                            case 1:
-                                playerList.append(Player(pName: p1name))
-                                break
-                            case 2:
-                                playerList.append(Player(pName: p2name))
-                                break
-                            case 3:
-                                playerList.append(Player(pName: p3name))
-                                break
-                            case 4:
-                                playerList.append(Player(pName: p4name))
-                                break
-                            default:
-                                break
+                    if gamemode == 1{
+                        playerList.append(Player(pName: p1name))
+                        for i in 1..<numPlayers{
+                            playerList.append(Player(pName: "CPU \(i)"))
+                        }
+                    }else if gamemode == 2{
+                        for i in 1...numPlayers{
+                            switch i{
+                                case 1:
+                                    playerList.append(Player(pName: p1name))
+                                    break
+                                case 2:
+                                    playerList.append(Player(pName: p2name))
+                                    break
+                                case 3:
+                                    playerList.append(Player(pName: p3name))
+                                    break
+                                case 4:
+                                    playerList.append(Player(pName: p4name))
+                                    break
+                                default:
+                                    break
+                            }
                         }
                     }
                 }
@@ -205,6 +224,18 @@ struct CreateGame: View {
                     .fontWeight(.semibold)
                 if(gamemode == 1){
                     //link to singleplayer
+                    if(playerList.count >= 2 && playerList.count <= 4){
+                        NavigationLink(destination: GamePlaySingle(players: playerList)){
+                            Text("Start Game")
+                                .frame(width: 300, height: 50, alignment: .center)
+                                .foregroundStyle(.black)
+                                .background(.gray)
+                                .cornerRadius(20)
+                                .fontWeight(.bold)
+                                .font(.title3)
+                        }
+                    }
+                    
                 }else if(gamemode == 2){
                     if(playerList.count >= 2 && playerList.count <= 4){
                         NavigationLink(destination: GamePlayLMult(players: playerList)){
