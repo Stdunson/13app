@@ -33,6 +33,8 @@ struct ContentView: View {
                         .fontWeight(.bold)
                         .font(.title3)
                 }
+                //add back when adding music, etc
+                /*
                 NavigationLink(destination: Settings()){
                     Text("Settings")
                         .frame(width: 300, height: 50, alignment: .center)
@@ -42,6 +44,7 @@ struct ContentView: View {
                         .fontWeight(.bold)
                         .font(.title3)
                 }
+                */
                 NavigationLink(destination: Credits()){
                     Text("Credits")
                         .frame(width: 300, height: 50, alignment: .center)

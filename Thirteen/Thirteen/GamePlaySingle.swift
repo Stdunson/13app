@@ -27,11 +27,12 @@ struct GamePlaySingle: View {
     @State var showHand: Bool = false
     
     func cpuPlay(){
+        message = ""
         while(currPlayerIndex != 0 && !game.isGameOver()){
             let play: [Card] = cpu.playTurn(player: players[currPlayerIndex])
             if play.count == 0{
                 players[currPlayerIndex].fold()
-                message = "\(players[currPlayerIndex].getName()) has folded."
+                message += "\n\(players[currPlayerIndex].getName()) has folded."
                 //find way to delay nextplayer so user sees message
                 nextPlayer()
             }else{
@@ -39,8 +40,7 @@ struct GamePlaySingle: View {
                     game.playCards(player: players[currPlayerIndex], cardList: play)
                     currCards = game.currPlay
                 }
-                message = "\(players[currPlayerIndex].getName()) has made their play."
-                //find way to delay nextplayer so user sees message
+                message += "\n\(players[currPlayerIndex].getName()) has made their play."
                 nextPlayer()
             }
         }
@@ -56,11 +56,10 @@ struct GamePlaySingle: View {
                     message = "\(players[winner].name) has won the game"
                 }
                 gameOver = true
-                //go to game over view
+                viewID = UUID()
                 return
             }
             currPlayerIndex = game.StartNewRound(lastFolder: currPlayerIndex)
-            print("Next round started")
             if(currPlayerIndex == 0){
                 message = "\(players[currPlayerIndex].name), start the next round"
             }else{
@@ -73,11 +72,6 @@ struct GamePlaySingle: View {
             for p in 0..<numPlayers{
                 if !players[p].hasFolded(){
                     currPlayerIndex = p
-                    if(winner == 0){
-                        message = "Play your turn, \(players[currPlayerIndex].name)"
-                    }else{
-                        message = "\(players[currPlayerIndex].name) will play their turn"
-                    }
                     break
                 }
             }
@@ -86,7 +80,6 @@ struct GamePlaySingle: View {
             for p in currPlayerIndex + 1..<numPlayers{
                 if !players[p].hasFolded(){
                     currPlayerIndex = p
-                    message = "Play your turn, \(players[currPlayerIndex].name)"
                     break
                 }
             }
@@ -94,11 +87,6 @@ struct GamePlaySingle: View {
                 for p in 0..<currPlayerIndex{
                     if !players[p].hasFolded(){
                         currPlayerIndex = p
-                        if(winner == 0){
-                            message = "Play your turn, \(players[currPlayerIndex].name)"
-                        }else{
-                            message = "\(players[currPlayerIndex].name) will play their turn"
-                        }
                         break
                     }
                 }
@@ -107,7 +95,7 @@ struct GamePlaySingle: View {
     }
     
     var body: some View {
-        NavigationView {
+        NavigationStack {
             if(deckReady){
                 VStack{
                     //tab wit exit n allat
@@ -214,7 +202,7 @@ struct GamePlaySingle: View {
                         }
                     }
                     .navigationDestination(isPresented: $gameOver){
-                        GameOverLMult(players: players, winner: winner)
+                        GameOverSingle(players: players, winner: winner)
                     }
                 }
             }else{
@@ -235,10 +223,11 @@ struct GamePlaySingle: View {
             }
             deckReady = true
         })
+        
         .navigationBarBackButtonHidden(true)
     }
 }
 
 #Preview {
-    GamePlaySingle(players: [Player(pName: "Shavaughn"), Player(pName: "CPU 1")])
+    GamePlaySingle(players: [Player(pName: "Shavaughn"), Player(pName: "CPU 1"), Player(pName: "CPU 2")])
 }
