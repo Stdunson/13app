@@ -17,6 +17,14 @@ class Player: Identifiable{
         name = pName
         cardPlayed = Array(repeating: false, count: 13)
     }
+    init(){
+        hand = []
+        wincount = 0
+        losscount = 0
+        folded = false
+        name = "Unnamed person"
+        cardPlayed = Array(repeating: false, count: 13)
+    }
     
     func setHand(newHand: [Card]){
         hand = []

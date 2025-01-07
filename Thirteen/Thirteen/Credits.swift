@@ -14,7 +14,7 @@ struct Credits: View {
                 Text("Shavaughn Dunson")
                     .font(.largeTitle)
                     .bold()
-                Text("- All Game Logic, Models, and UI")
+                Text("- iOS: All Game Logic, Models, and UI")
                 Text("- Socials: [Instagram](https://www.instagram.com/stdunson/?hl=en), [Linkedin](https://www.linkedin.com/in/shavaughn-dunson/), [Github](https://github.com/Stdunson)")                
             }
             .accentColor(.gray)
