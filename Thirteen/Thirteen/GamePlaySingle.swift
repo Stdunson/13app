@@ -6,6 +6,7 @@
 //
 
 import SwiftUI
+import Foundation
 
 struct GamePlaySingle: View {
     @State var players: [Player]
@@ -25,6 +26,26 @@ struct GamePlaySingle: View {
     @State var winner: Int = 0
     @State var showHand: Bool = false
     
+    func cpuPlay(){
+        while(currPlayerIndex != 0 && !game.isGameOver()){
+            let play: [Card] = cpu.playTurn(player: players[currPlayerIndex])
+            if play.count == 0{
+                players[currPlayerIndex].fold()
+                message = "\(players[currPlayerIndex].getName()) has folded."
+                //find way to delay nextplayer so user sees message
+                nextPlayer()
+            }else{
+                if(game.isLegalPlay(cardList: play)){
+                    game.playCards(player: players[currPlayerIndex], cardList: play)
+                    currCards = game.currPlay
+                }
+                message = "\(players[currPlayerIndex].getName()) has made their play."
+                //find way to delay nextplayer so user sees message
+                nextPlayer()
+            }
+        }
+    }
+    
     func nextPlayer(){
         if game.isRoundOver(){
             if(game.isGameOver()){
@@ -35,9 +56,11 @@ struct GamePlaySingle: View {
                     message = "\(players[winner].name) has won the game"
                 }
                 gameOver = true
+                //go to game over view
                 return
             }
             currPlayerIndex = game.StartNewRound(lastFolder: currPlayerIndex)
+            print("Next round started")
             if(currPlayerIndex == 0){
                 message = "\(players[currPlayerIndex].name), start the next round"
             }else{
@@ -105,6 +128,7 @@ struct GamePlaySingle: View {
                         ForEach(players) { player in
                             if(!player.equals(otherPlayer: players[0])){
                                 PlayerInfoCard(player: player)
+                                    .id(viewID)
                             }
                         }
                     }
@@ -136,54 +160,58 @@ struct GamePlaySingle: View {
                     }
                         .frame(height: 100)
                     HStack{
-                        //play button
-                        Button("Play cards"){
-                            if(players[currPlayerIndex].equals(otherPlayer: players[0])){
-                                var selectedCards: [Card] = []
-                                for card in players[currPlayerIndex].hand {
-                                    if card.sel {
-                                        selectedCards.append(card)
+                        if currPlayerIndex == 0{
+                            //play button
+                            Button("Play cards"){
+                                if(players[currPlayerIndex].equals(otherPlayer: players[0])){
+                                    var selectedCards: [Card] = []
+                                    for card in players[currPlayerIndex].hand {
+                                        if card.sel {
+                                            selectedCards.append(card)
+                                        }
                                     }
-                                }
-                                if selectedCards.count > 0 {
-                                    if game.isLegalPlay(cardList: selectedCards) {
-                                        game.playCards(player: players[currPlayerIndex], cardList: selectedCards)
-                                        currCards = game.currPlay
-                                        nextPlayer()
+                                    if selectedCards.count > 0 {
+                                        if game.isLegalPlay(cardList: selectedCards) {
+                                            game.playCards(player: players[currPlayerIndex], cardList: selectedCards)
+                                            currCards = game.currPlay
+                                            nextPlayer()
+                                        } else {
+                                            message = "Invalid play. Try Again, \(players[currPlayerIndex].name)"
+                                            selectedCards = []
+                                        }
                                     } else {
                                         message = "Invalid play. Try Again, \(players[currPlayerIndex].name)"
                                         selectedCards = []
                                     }
-                                } else {
-                                    message = "Invalid play. Try Again, \(players[currPlayerIndex].name)"
-                                    selectedCards = []
-                                }
-                                viewID = UUID()
-                                while(currPlayerIndex != 0){
-                                    //have function for CPU plays here
-                                }
-                            }
-                        }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.gray)
-                            .foregroundStyle(.black)
-                            .fontWeight(.semibold)
-                        //fold button
-                        Button("Fold"){
-                            if(players[currPlayerIndex].equals(otherPlayer: players[0])){
-                                if(!players[currPlayerIndex].hasFolded() && !game.isFirstRound){
-                                    players[currPlayerIndex].fold()
-                                    nextPlayer()
                                     viewID = UUID()
-                                }else if(game.isFirstRound){
-                                    message = "Invalid play. Try Again, \(players[currPlayerIndex].name)"
+                                    cpuPlay()
+                                    
                                 }
                             }
+                                .buttonStyle(.borderedProminent)
+                                .tint(.gray)
+                                .foregroundStyle(.black)
+                                .fontWeight(.semibold)
+                            //fold button
+                            Button("Fold"){
+                                if(players[currPlayerIndex].equals(otherPlayer: players[0])){
+                                    if(!players[currPlayerIndex].hasFolded() && !game.isFirstRound){
+                                        players[currPlayerIndex].fold()
+                                        nextPlayer()
+                                        if(!game.isGameOver() && currPlayerIndex != 0){
+                                            cpuPlay()
+                                        }
+                                        viewID = UUID()
+                                    }else if(game.isFirstRound){
+                                        message = "Invalid play. Try Again, \(players[currPlayerIndex].name)"
+                                    }
+                                }
+                            }
+                                .buttonStyle(.borderedProminent)
+                                .tint(.gray)
+                                .foregroundStyle(.black)
+                                .fontWeight(.semibold)
                         }
-                            .buttonStyle(.borderedProminent)
-                            .tint(.gray)
-                            .foregroundStyle(.black)
-                            .fontWeight(.semibold)
                     }
                     .navigationDestination(isPresented: $gameOver){
                         GameOverLMult(players: players, winner: winner)
@@ -203,6 +231,7 @@ struct GamePlaySingle: View {
                 message = "Play the first turn, \(players[currPlayerIndex].name)!"
             }else{
                 message = "\(players[currPlayerIndex].name) will play the first turn"
+                cpuPlay()
             }
             deckReady = true
         })

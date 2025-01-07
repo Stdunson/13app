@@ -27,7 +27,6 @@ class Card: Identifiable, ObservableObject{
             sel = false
         }else{
             sel = true
-            print("Selected")
         }
     }
 }

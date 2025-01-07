@@ -104,7 +104,6 @@ class GameObject{
         }else if(cards.count == 2){
             if(cards[0].cardVal != cards[1].cardVal){
                 isValid = false
-                print("Debug: illegal card distribution")
             }else{
                 diffhasBeenZero = true
             }
@@ -115,12 +114,10 @@ class GameObject{
                     diffhasBeenZero = true
                 }else if(diff > 1){
                     isValid = false
-                    print("Debug: illegal card distribution")
                     break
                 }
                 if(diffhasBeenZero == true && diff > 0){
                     isValid = false
-                    print("Debug: illegal card distribution")
                     break
                 }
             }
@@ -135,21 +132,16 @@ class GameObject{
             }
             if(!isStraight && !diffhasBeenZero){
                 isValid = false
-                print("Debug: different play types")
             }else if(isStraight && diffhasBeenZero){
                 isValid = false
-                print("Debug: different play types")
             }
             if(cards.count != currPlay.count){
                 isValid = false
-                print("Debug: play not same length")
             }
             if(cards[cards.count - 1].cardVal < currPlay[currPlay.count - 1].cardVal){
                 isValid = false
-                print("Debug: last card not higher")
             }else if(cards[cards.count - 1].cardVal == currPlay[currPlay.count - 1].cardVal && cards[cards.count - 1].cardSuit < currPlay[currPlay.count - 1].cardSuit){
                 isValid = false
-                print("Debug: last card not higher")
             }
         }
         if isFirstRound == true{
@@ -171,11 +163,31 @@ class GameObject{
             }
             if(!lowestFound){
                 isValid = false
-                print("lowest not found")
             }
         }
         
-        return isValid;
+        if cards.count > 1 {
+            var allSameValue = true
+            var isStraight = true
+
+            for i in 0..<cards.count - 1 {
+                let diff = cards[i + 1].cardVal - cards[i].cardVal
+                if diff == 0 {
+                    isStraight = false
+                } else if diff == 1 {
+                    allSameValue = false
+                } else {
+                    isValid = false
+                    break
+                }
+            }
+
+            if !(allSameValue || isStraight) {
+                isValid = false
+            }
+        }
+        
+        return isValid
     }
     
     func playCards(player: Player, cardList: [Card]){
