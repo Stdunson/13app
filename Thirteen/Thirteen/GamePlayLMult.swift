@@ -17,12 +17,85 @@ struct GamePlayLMult: View {
     @State var deckReady: Bool = false
     @State var currPlayerIndex: Int = 0
     @State var message: String = "Play your turn!"
+    @State var playLog: String = "Play Log"
     @State var currCards: [Card] = []
     @State var game: GameObject = GameObject(players: [])
     @State var viewID = UUID()
     @State var gameOver: Bool = false
     @State var winner: Int = 0
     @State var showHand: Bool = false
+    
+    func logPlay(selectedCards: [Card]){
+        var playString: String = ""
+        for card in selectedCards{
+            var cardNum: String{
+                if(card.cardVal <= 8 && card.cardVal != 0){
+                    return String(card.cardVal + 2)
+                }else if(card.cardVal == 9){
+                    return "Jack"
+                }else if(card.cardVal == 10){
+                    return "Queen"
+                }else if(card.cardVal == 11){
+                    return "King"
+                }else if(card.cardVal == 12){
+                    return "Ace"
+                }else if(card.cardVal == 13){
+                    return "2"
+                }
+                return "error"
+            }
+            var cardSuitString: String{
+                if(card.cardSuit == Suit.Heart){
+                    return "Hearts"
+                }else if(card.cardSuit == Suit.Diamond){
+                    return "Diamonds"
+                }else if(card.cardSuit == Suit.Club){
+                    return "Clubs"
+                }else if(card.cardSuit == Suit.Spade){
+                    return "Spades"
+                }
+                return "error"
+            }
+            
+            playString += cardNum + " of " + cardSuitString
+            if(card.cardVal == selectedCards[selectedCards.count - 1].cardVal && selectedCards[selectedCards.count - 1].cardSuit == card.cardSuit){
+                playString += "."
+            }else{
+                playString += ", "
+            }
+        }
+        if playLog == "Play Log"{
+            playLog = ""
+        }
+        
+        if playLog == ""{
+            playLog += "\(players[currPlayerIndex].getName()) has played \(playString)"
+        }else{
+            playLog += "\n\(players[currPlayerIndex].getName()) has played \(playString)"
+        }
+        
+        chopLog()
+    }
+    
+    func chopLog(){
+        let amtLines: Int = playLog.filter { $0 == "\n" }.count
+        if amtLines > 2 {
+            var count = 0
+            var startIndex = playLog.startIndex
+            
+            for (index, char) in playLog.enumerated().reversed() {
+                if char == "\n" {
+                    count += 1
+                    if count == 2 {
+                        startIndex = playLog.index(playLog.startIndex, offsetBy: index + 1)
+                        break
+                    }
+                }
+            }
+            
+            playLog = String(playLog[startIndex...])
+        }
+    }
     
     func nextPlayer(){
         if game.isRoundOver(){
@@ -34,6 +107,7 @@ struct GamePlayLMult: View {
             }
             currPlayerIndex = game.StartNewRound(lastFolder: currPlayerIndex)
             message = "\(players[currPlayerIndex].name), start the next round"
+            playLog = ""
             currCards = []
             return
         }
@@ -97,6 +171,11 @@ struct GamePlayLMult: View {
                         .font(.title)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    //play log
+                    Text(playLog)
+                        .font(.headline)
+                        .multilineTextAlignment(.center)
                         .padding([.leading, .bottom, .trailing])
                     //other players' name + amt cards
                     HStack{
@@ -148,12 +227,14 @@ struct GamePlayLMult: View {
                                     game.playCards(player: players[currPlayerIndex], cardList: selectedCards)
                                     currCards = game.currPlay
                                     showHand = false
+                                    //put play on play log
+                                    logPlay(selectedCards: selectedCards)
                                     nextPlayer()
-                                } else {
+                                }else{
                                     message = "Invalid play. Try Again, \(players[currPlayerIndex].name)"
                                     selectedCards = []
                                 }
-                            } else {
+                            }else{
                                 message = "Invalid play. Try Again, \(players[currPlayerIndex].name)"
                                 selectedCards = []
                             }
@@ -168,6 +249,8 @@ struct GamePlayLMult: View {
                             if(!players[currPlayerIndex].hasFolded() && !game.isFirstRound){
                                 players[currPlayerIndex].fold()
                                 showHand = false
+                                playLog += "\n\(players[currPlayerIndex].name) has folded"
+                                chopLog()
                                 nextPlayer()
                                 viewID = UUID()
                             }else if(game.isFirstRound){
@@ -202,6 +285,11 @@ struct GamePlayLMult: View {
             gameDeck.deal(players: players)
             currPlayerIndex = game.StartFirstRound()
             message = "Play the first turn, \(players[currPlayerIndex].name)!"
+            if(game.isGameOver()){
+                winner = game.manageWins()
+                message = "Congrats! \(players[winner].name) has won the game!"
+                gameOver = true
+            }
             deckReady = true
         })
         .navigationBarBackButtonHidden(true)

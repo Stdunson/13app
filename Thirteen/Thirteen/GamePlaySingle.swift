@@ -18,6 +18,7 @@ struct GamePlaySingle: View {
     @State var deckReady: Bool = false
     @State var currPlayerIndex: Int = 0
     @State var message: String = "Play your turn!"
+    @State var playLog: String = "Play Log"
     @State var currCards: [Card] = []
     @State var game: GameObject = GameObject(players: [])
     @State var cpu: ComputerPlay = ComputerPlay(newGame: GameObject(players: []))
@@ -27,20 +28,57 @@ struct GamePlaySingle: View {
     @State var showHand: Bool = false
     
     func cpuPlay(){
-        message = ""
+        playLog = ""
         while(currPlayerIndex != 0 && !game.isGameOver()){
             let play: [Card] = cpu.playTurn(player: players[currPlayerIndex])
             if play.count == 0{
                 players[currPlayerIndex].fold()
-                message += "\n\(players[currPlayerIndex].getName()) has folded."
-                //find way to delay nextplayer so user sees message
+                playLog += "\n\(players[currPlayerIndex].getName()) has folded."
                 nextPlayer()
             }else{
                 if(game.isLegalPlay(cardList: play)){
                     game.playCards(player: players[currPlayerIndex], cardList: play)
                     currCards = game.currPlay
                 }
-                message += "\n\(players[currPlayerIndex].getName()) has made their play."
+                var playString: String = ""
+                for card in play{
+                    var cardNum: String{
+                        if(card.cardVal <= 8 && card.cardVal != 0){
+                            return String(card.cardVal + 2)
+                        }else if(card.cardVal == 9){
+                            return "Jack"
+                        }else if(card.cardVal == 10){
+                            return "Queen"
+                        }else if(card.cardVal == 11){
+                            return "King"
+                        }else if(card.cardVal == 12){
+                            return "Ace"
+                        }else if(card.cardVal == 13){
+                            return "2"
+                        }
+                        return "error"
+                    }
+                    var cardSuitString: String{
+                        if(card.cardSuit == Suit.Heart){
+                            return "Hearts"
+                        }else if(card.cardSuit == Suit.Diamond){
+                            return "Diamonds"
+                        }else if(card.cardSuit == Suit.Club){
+                            return "Clubs"
+                        }else if(card.cardSuit == Suit.Spade){
+                            return "Spades"
+                        }
+                        return "error"
+                    }
+                    
+                    playString += cardNum + " of " + cardSuitString
+                    if(card.cardVal == play[play.count - 1].cardVal && play[play.count - 1].cardSuit == card.cardSuit){
+                        playString += "."
+                    }else{
+                        playString += ", "
+                    }
+                }
+                playLog += "\n\(players[currPlayerIndex].getName()) has played \(playString)"
                 nextPlayer()
             }
         }
@@ -110,6 +148,11 @@ struct GamePlaySingle: View {
                         .font(.title)
                         .fontWeight(.semibold)
                         .multilineTextAlignment(.center)
+                        .padding(.horizontal)
+                    //play log
+                    Text(playLog)
+                        .font(.headline)
+                        .multilineTextAlignment(.center)
                         .padding([.leading, .bottom, .trailing])
                     //other players' name + amt cards
                     HStack{
@@ -162,7 +205,11 @@ struct GamePlaySingle: View {
                                         if game.isLegalPlay(cardList: selectedCards) {
                                             game.playCards(player: players[currPlayerIndex], cardList: selectedCards)
                                             currCards = game.currPlay
-                                            nextPlayer()
+                                            if(!game.isGameOver()){
+                                                nextPlayer()
+                                                cpuPlay()
+                                                viewID = UUID()
+                                            }
                                         } else {
                                             message = "Invalid play. Try Again, \(players[currPlayerIndex].name)"
                                             selectedCards = []
@@ -172,8 +219,6 @@ struct GamePlaySingle: View {
                                         selectedCards = []
                                     }
                                     viewID = UUID()
-                                    cpuPlay()
-                                    
                                 }
                             }
                                 .buttonStyle(.borderedProminent)
@@ -215,11 +260,22 @@ struct GamePlaySingle: View {
             cpu = ComputerPlay(newGame: game)
             gameDeck.deal(players: players)
             currPlayerIndex = game.StartFirstRound()
-            if(currPlayerIndex == 0){
-                message = "Play the first turn, \(players[currPlayerIndex].name)!"
+            if(game.isGameOver()){
+                winner = game.manageWins()
+                if(winner == 0){
+                    message = "Congrats! You have won the game!"
+                }else{
+                    message = "\(players[winner].name) has won the game"
+                }
+                gameOver = true
+                viewID = UUID()
             }else{
-                message = "\(players[currPlayerIndex].name) will play the first turn"
-                cpuPlay()
+                if(currPlayerIndex == 0){
+                    message = "Play the first turn, \(players[currPlayerIndex].name)!"
+                }else{
+                    message = "\(players[currPlayerIndex].name) will play the first turn"
+                    cpuPlay()
+                }
             }
             deckReady = true
         })

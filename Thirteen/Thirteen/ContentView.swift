@@ -33,7 +33,7 @@ struct ContentView: View {
                         .fontWeight(.bold)
                         .font(.title3)
                 }
-                //add back when adding music, etc
+                //add back when adding music,  multiplayer etc
                 /*
                 NavigationLink(destination: Settings()){
                     Text("Settings")

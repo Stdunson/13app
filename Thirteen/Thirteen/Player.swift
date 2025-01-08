@@ -46,7 +46,11 @@ class Player: Identifiable{
         }
     }
     func hasWon() -> Bool{
-        if !hand.isEmpty{
+        if(hasAllTwos()){
+            return true
+        }else if(has13Straight()){
+            return true
+        }else if !hand.isEmpty{
             return false
         }
         return true
@@ -88,8 +92,11 @@ class Player: Identifiable{
         losscount += 1
     }
     func hasAllTwos() -> Bool{
+        if hand.count == 0{
+            return false
+        }
         var amt2s: Int = 0
-        for i in 0...12{
+        for i in 0..<hand.count{
             if(hand[i].cardVal == 13){
                 amt2s += 1
             }
@@ -97,9 +104,12 @@ class Player: Identifiable{
         return amt2s == 4
     }
     func has13Straight() -> Bool{
+        if hand.count == 0{
+            return false
+        }
         var cardsHad: [Card] = []
         cardsHad.append(hand[0])
-        for i in 0...12{
+        for i in 0..<hand.count{
             for j in cardsHad{
                 if(j.cardVal == hand[i].cardVal){
                     return false

@@ -14,11 +14,27 @@ struct GameOverLMult: View {
     var body: some View {
         NavigationView {
             VStack{
-                Text("\(players[winner].name) has won the game!")
+                Text("\(players[winner].name) has won the game")
                     .font(.largeTitle)
                     .fontWeight(.bold)
-                    .padding()
+                    .padding([.top, .leading, .trailing])
                     .multilineTextAlignment(.center)
+                if players[winner].hand.count == 0{
+                    Text("\(players[winner].name) ran out of cards")
+                        .font(.headline)
+                        .padding(.bottom)
+                }else{
+                    if(players[winner].hasAllTwos()){
+                        Text("\(players[winner].name) had all of the 2s")
+                            .font(.headline)
+                            .padding(.bottom)
+                    }else if(players[winner].has13Straight()){
+                        Text("\(players[winner].name) had 13 straight")
+                            .font(.headline)
+                            .padding(.bottom)
+                    }
+                
+                }
                 VStack{
                     ForEach(players) { player in
                         ZStack{
