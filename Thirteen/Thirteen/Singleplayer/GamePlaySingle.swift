@@ -101,7 +101,7 @@ struct GamePlaySingle: View {
             if(currPlayerIndex == 0){
                 message = "\(players[currPlayerIndex].name), start the next round"
             }else{
-                message = "\(players[currPlayerIndex].name) will start the next round"
+                message = "\(players[currPlayerIndex].name) has started the round"
             }
             currCards = []
             return
@@ -279,7 +279,6 @@ struct GamePlaySingle: View {
             }
             deckReady = true
         })
-        
         .navigationBarBackButtonHidden(true)
     }
 }

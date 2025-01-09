@@ -69,7 +69,7 @@ struct GameOverSingle: View {
                                 Text("Wins: \(players[0].getWins())")
                                     .font(.title)
                                     .fontWeight(.semibold)
-                                Text("Losses: \(players[0].getWins())")
+                                Text("Losses: \(players[0].getLosses())")
                                     .font(.title)
                                     .fontWeight(.semibold)
                             }

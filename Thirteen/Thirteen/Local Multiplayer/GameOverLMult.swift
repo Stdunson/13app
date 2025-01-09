@@ -47,7 +47,7 @@ struct GameOverLMult: View {
                                 Text("\(player.getName())")
                                     .bold()
                                 Text("Wins: \(player.getWins())")
-                                Text("Losses: \(player.getWins())")
+                                Text("Losses: \(player.getLosses())")
                             }
                         }
                     }

@@ -83,16 +83,27 @@ struct CreateGame: View {
                         }
                     }
                     Button(action: {
-                        message = "Coming Soon..."
+                        message = "Online Multiplayer Game"
+                        gamemode = 3
                     }){
                         ZStack{
-                            RoundedRectangle(cornerRadius: 10)
-                                .frame(width: 30, height: 30)
-                                .overlay(RoundedRectangle(cornerRadius: 10)
-                                    .stroke(Color.black, lineWidth: 3) )
-                                .foregroundStyle(.white)
-                            Image(systemName: "globe")
-                                .foregroundStyle(.black)
+                            if gamemode == 3{
+                                RoundedRectangle(cornerRadius: 10)
+                                    .frame(width: 30, height: 30)
+                                    .overlay(RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.black, lineWidth: 3) )
+                                    .foregroundStyle(.black)
+                                Image(systemName: "globe")
+                                    .foregroundStyle(.white)
+                            }else{
+                                RoundedRectangle(cornerRadius: 10)
+                                    .frame(width: 30, height: 30)
+                                    .overlay(RoundedRectangle(cornerRadius: 10)
+                                        .stroke(Color.black, lineWidth: 3) )
+                                    .foregroundStyle(.white)
+                                Image(systemName: "globe")
+                                    .foregroundStyle(.black)
+                            }
                         }
                     }
                 }
@@ -160,7 +171,6 @@ struct CreateGame: View {
                     }
                 }
                 
-                //if statements sets up other adding gamemodes
                 if(gamemode == 1){
                     TextField("Enter Name:", text: $p1name)
                         .foregroundStyle(.black)
@@ -216,6 +226,8 @@ struct CreateGame: View {
                                     break
                             }
                         }
+                    }else if gamemode == 3{
+                        playerList.append(Player(pName: p1name))
                     }
                 }
                     .buttonStyle(.borderedProminent)
@@ -249,7 +261,17 @@ struct CreateGame: View {
                         }
                     }
                 }else if(gamemode == 3){
-                    //link to online multiplayer
+                    if(playerList.count > 0){
+                        NavigationLink(destination: LobbyView(player: playerList[0], playerAmt: numPlayers)){
+                            Text("Start Game")
+                                .frame(width: 300, height: 50, alignment: .center)
+                                .foregroundStyle(.black)
+                                .background(.gray)
+                                .cornerRadius(20)
+                                .fontWeight(.bold)
+                                .font(.title3)
+                        }
+                    }
                 }
             }
         }
