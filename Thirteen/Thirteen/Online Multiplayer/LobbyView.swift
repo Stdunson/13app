@@ -11,10 +11,12 @@ struct LobbyView: View {
     let player: Player
     let playerAmt: Int
     var body: some View {
-        VStack{
-            Text(player.getName())
-            Text("\(playerAmt)")
+        NavigationStack{
+            VStack{
+                Text("Coming soon")
+            }
         }
+        .navigationBarBackButtonHidden(true)
     }
 }
 
